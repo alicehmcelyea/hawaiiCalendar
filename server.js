@@ -95,7 +95,7 @@ app.get("/", (req, res) => {
 
 <div class="calendar">
   <div class="header">
-    <span>Month</span>
+    <span>January 2026</span>
     <span>‹ ›</span>
   </div>
 
@@ -115,8 +115,8 @@ app.get("/", (req, res) => {
 
 <script>
   const YEAR = 2026;
-  const MONTH = 0; // October (0-based: Jan = 0)
-
+  const MONTH = 0; 
+  
   function getMondayStart(date) {
     const d = new Date(date);
     const day = d.getDay() || 7; // Sun → 7
@@ -162,7 +162,6 @@ app.get("/", (req, res) => {
   cell.classList.add(status);
   cell.innerHTML =
     "<div>" + current.getDate() + "</div>" +
-    "<div class='price'>$25.00</div>";
 } else {
   cell.style.background = "#e0e0e0";
   cell.innerHTML =
