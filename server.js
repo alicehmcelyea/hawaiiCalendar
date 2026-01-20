@@ -95,7 +95,7 @@ app.get("/", (req, res) => {
 
 <div class="calendar">
   <div class="header">
-    <span>October 2025</span>
+    <span>Month</span>
     <span>‹ ›</span>
   </div>
 
@@ -114,8 +114,8 @@ app.get("/", (req, res) => {
 </div>
 
 <script>
-  const YEAR = 2025;
-  const MONTH = 9; // October (0-based: Jan = 0)
+  const YEAR = 2026;
+  const MONTH = 0; // October (0-based: Jan = 0)
 
   function getMondayStart(date) {
     const d = new Date(date);
