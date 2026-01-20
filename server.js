@@ -161,7 +161,7 @@ app.get("/", (req, res) => {
        if (status) {
   cell.classList.add(status);
   cell.innerHTML =
-    "<div>" + current.getDate() + "</div>" +
+    "<div>" + current.getDate() + "</div>"
 } else {
   cell.style.background = "#e0e0e0";
   cell.innerHTML =
