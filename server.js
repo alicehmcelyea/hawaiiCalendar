@@ -114,22 +114,65 @@ app.get("/", (req, res) => {
 </div>
 
 <script>
-fetch("/calendar")
-  .then(res => res.json())
-  .then(data => {
-    const grid = document.getElementById("grid");
+  const YEAR = 2025;
+  const MONTH = 9; // October (0-based: Jan = 0)
 
-    data.availability.forEach((item, i) => {
-      const cell = document.createElement("div");
-      cell.className = \`cell \${item.status}\`;
-      cell.innerHTML = \`
-        <div>\${new Date(item.date).getDate()}</div>
-        <div class="price">$25.00</div>
-      \`;
-      grid.appendChild(cell);
+  function getMondayStart(date) {
+    const d = new Date(date);
+    const day = d.getDay() || 7; // Sun → 7
+    d.setDate(d.getDate() - (day - 1));
+    return d;
+  }
+
+  function formatDate(date) {
+    return date.toISOString().split("T")[0];
+  }
+
+  fetch("/calendar")
+    .then(res => res.json())
+    .then(data => {
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+
+      // Build lookup: { "YYYY-MM-DD": "available" }
+      const availabilityMap = {};
+      data.availability.forEach(d => {
+        availabilityMap[d.date] = d.status;
+      });
+
+      const firstOfMonth = new Date(YEAR, MONTH, 1);
+      const startDate = getMondayStart(firstOfMonth);
+
+      // 6 weeks × 7 days = 42 cells
+      for (let i = 0; i < 42; i++) {
+        const current = new Date(startDate);
+        current.setDate(startDate.getDate() + i);
+
+        const cell = document.createElement("div");
+        cell.className = "cell";
+
+        const iso = formatDate(current);
+        const status = availabilityMap[iso];
+
+        if (current.getMonth() !== MONTH) {
+          cell.style.opacity = "0.3";
+        }
+
+       if (status) {
+  cell.classList.add(status);
+  cell.innerHTML =
+    "<div>" + current.getDate() + "</div>" +
+    "<div class='price'>$25.00</div>";
+} else {
+  cell.style.background = "#e0e0e0";
+  cell.innerHTML =
+    "<div>" + current.getDate() + "</div>";
+}
+        grid.appendChild(cell);
+      }
     });
-  });
 </script>
+
 
 </body>
 </html>
