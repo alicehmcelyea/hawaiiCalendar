@@ -184,9 +184,13 @@ app.get("/calendar", (req, res) => {
   res.json({
     property: "Mock Hawaii Property",
     availability: [
-      { date: "2026-02-01", status: "available" },
-      { date: "2026-02-02", status: "booked" },
-      { date: "2026-02-03", status: "available" }
+      { date: "2026-01-03", status: "available" },
+      { date: "2026-01-04", status: "available" },
+      { date: "2026-01-10", status: "pending" },
+      { date: "2026-01-15", status: "booked" },
+      { date: "2026-01-16", status: "booked" },
+      { date: "2026-01-20", status: "available" },
+      { date: "2026-01-25", status: "pending" }
     ]
   });
 });
@@ -196,3 +200,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
