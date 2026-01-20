@@ -6,38 +6,136 @@ app.use(cors());
 
 app.get("/", (req, res) => {
   res.send(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <title>Hawaii Calendar Preview</title>
-        <style>
-          body { font-family: system-ui, sans-serif; padding: 2rem; }
-          .available { color: green; }
-          .booked { color: red; }
-        </style>
-      </head>
-      <body>
-        <h1>Hawaii Calendar (Render Preview)</h1>
-        <div id="calendar">Loading…</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hawaii Calendar Preview</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #f4f4f4;
+      padding: 2rem;
+    }
 
-        <script>
-          fetch("/calendar")
-            .then(res => res.json())
-            .then(data => {
-              const el = document.getElementById("calendar");
-              el.innerHTML = data.availability
-                .map(d => 
-                  \`<div class="\${d.status}">
-                    \${d.date}: \${d.status}
-                  </div>\`
-                )
-                .join("");
-            });
-        </script>
-      </body>
-    </html>
+    .calendar {
+      max-width: 420px;
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      font-size: 0.75rem;
+      color: #666;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .cell {
+      aspect-ratio: 1 / 1;
+      color: white;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    .price {
+      font-size: 0.7rem;
+      font-weight: 400;
+    }
+
+    .available { background: #6da544; }
+    .booked { background: #c94444; }
+    .pending { background: #e6a057; }
+
+    .legend {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      font-size: 0.75rem;
+    }
+
+    .legend span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="calendar">
+  <div class="header">
+    <span>October 2025</span>
+    <span>‹ ›</span>
+  </div>
+
+  <div class="days">
+    <div>MO</div><div>TU</div><div>WE</div><div>TH</div>
+    <div>FR</div><div>SA</div><div>SU</div>
+  </div>
+
+  <div id="grid" class="grid"></div>
+
+  <div class="legend">
+    <span><div class="dot available"></div> Available</span>
+    <span><div class="dot booked"></div> Booked</span>
+    <span><div class="dot pending"></div> Pending</span>
+  </div>
+</div>
+
+<script>
+fetch("/calendar")
+  .then(res => res.json())
+  .then(data => {
+    const grid = document.getElementById("grid");
+
+    data.availability.forEach((item, i) => {
+      const cell = document.createElement("div");
+      cell.className = \`cell \${item.status}\`;
+      cell.innerHTML = \`
+        <div>\${new Date(item.date).getDate()}</div>
+        <div class="price">$25.00</div>
+      \`;
+      grid.appendChild(cell);
+    });
+  });
+</script>
+
+</body>
+</html>
   `);
 });
+
 
 
 app.get("/calendar", (req, res) => {
